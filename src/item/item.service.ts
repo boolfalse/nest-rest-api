@@ -1,52 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { Item } from './interfaces/item.interface';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class ItemService {
-    private readonly items: Item[] = [
-        {
-            id: '11111111',
-            name: "Item 1",
-            description: "Item 1 description",
-            qty: 100,
-        },
-        {
-            id: '22222222',
-            name: "Item 2",
-            description: "Item 2 description",
-            qty: 200,
-        },
-        {
-            id: '33333333',
-            name: "Item 3",
-            description: "Item 3 description",
-            qty: 300,
-        },
-    ];
+    constructor(@InjectModel('Item') private readonly itemModel: Model<Item>) {}
 
-    findAll(): Item[] {
-        return this.items;
+    async findAll(): Promise<Item[]> {
+        return this.itemModel.find();
     }
 
-    findOne(id: string): Item {
-        return this.items.find(item => item.id === id);
+    async findOne(id: string): Promise<Item> {
+        return this.itemModel.findOne({_id: id});
     }
 
-    create(item: Item): Item {
-        this.items.push(item);
-        return item;
+    async create(item: Item): Promise<Item> {
+        return await new this.itemModel(item).save();
     }
 
-    update(id: string, item: Item): Item {
-        const index = this.items.findIndex(i => i.id === id);
-        this.items[index] = item;
-        return item;
+    async update(id: string, item: Item): Promise<Item> {
+        return this.itemModel.findByIdAndUpdate(id, item, {
+            new: true // if there isn't one already, create a new one
+        });
     }
 
-    remove(id: string): Item {
-        const index = this.items.findIndex(i => i.id === id);
-        const deletedItem = this.items[index];
-        this.items.splice(index, 1);
-        return deletedItem;
+    async remove(id: string): Promise<Item> {
+        return this.itemModel.findByIdAndRemove(id);
     }
 }

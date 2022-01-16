@@ -8,23 +8,23 @@ import {Item} from './interfaces/item.interface';
 export class ItemController {
     constructor(private readonly itemService: ItemService) {}
     @Get()
-    findAll(): Item[] {
+    findAll(): Promise<Item[]> {
         return this.itemService.findAll();
     }
     @Post()
-    create(@Body() createItem: CreateDto): Item {
+    create(@Body() createItem: CreateDto): Promise<Item> {
         return this.itemService.create(createItem);
     }
     @Get(':id')
-    findOne(@Param('id') id): Item {
+    findOne(@Param('id') id): Promise<Item> {
         return this.itemService.findOne(id);
     }
     @Put(':id')
-    update(@Body() updateItem: UpdateDto, @Param('id') id): Item {
+    update(@Body() updateItem: UpdateDto, @Param('id') id): Promise<Item> {
         return this.itemService.update(id, updateItem);
     }
     @Delete(':id')
-    remove(@Param('id') id): Item {
+    remove(@Param('id') id): Promise<Item> {
         return this.itemService.remove(id);
     }
 }
