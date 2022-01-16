@@ -12,15 +12,15 @@ export class ItemController {
         return `This action adds an item ${createItem.name}`;
     }
     @Get(':id')
-    findOne(@Param() param): string {
-        return `This action returns a #${param.id} item`;
+    findOne(@Param('id') id): string {
+        return `This action returns a #${id} item`;
     }
     @Put(':id')
-    update(id: string): string {
+    update(@Param('id') id): string {
         return `This action updates a #${id} item`;
     }
     @Delete(':id')
-    remove(id: string): string {
+    remove(@Param('id') id): string {
         return `This action removes a #${id} item`;
     }
 }
